@@ -22,15 +22,10 @@ import android.graphics.Color;
 
 import static com.example.appproto01.GeneralApplicationSettings.EXTERNALLY_STORED_1;
 
-import java.sql.Time;
-import android.os.Handler;
-
 public class MainActivity extends Form implements HandlesEventDispatching {
 
-    private
-    VerticalScrollArrangement Screen1;
-    HorizontalArrangement HorizontalArrangement1, HorizontalArrangement2, HorizontalArrangement3, HorizontalArrangement4, HorizontalArrangement5;
-    VerticalArrangement VerticalArrangement1;
+    HorizontalArrangement HorizontalArrangement1, HorizontalArrangement2, HorizontalArrangement3, HorizontalArrangement4;
+    VerticalArrangement VerticalArrangement1, VerticalArrangement2;
     TableArrangement LocalNetworkSetup;
     Label TimeUntilRefreshNull, TimeUntilRefresh, lbl_IP, lbl_DeviceName, Co2, Co2Reading, Co2Measurement, TVOC, TVOCReading, TVOCMeasurement, Temp, TempReading, TempMeasurement, Logo;
     Button FindDeviceButton;
@@ -38,21 +33,21 @@ public class MainActivity extends Form implements HandlesEventDispatching {
     Notifier notifier_Messages;
     TextBox txt_DeviceName, txt_IP;
     Clock clock;
-    int TimeLeft, TickCounter;
+    int TickCounter;
     private static final String URL_MAIN = EXTERNALLY_STORED_1;
 
     protected void $define() {
         this.Sizing("Responsive");
-        Screen1 = new VerticalScrollArrangement(this);
+        VerticalScrollArrangement screen1 = new VerticalScrollArrangement(this);
         notifier_Messages = new Notifier(this);
-        Screen1.HeightPercent(100);
-        Screen1.WidthPercent(100);
-        Screen1.AlignVertical(1);
-        Screen1.AlignHorizontal(1);
-        Screen1.BackgroundColor(Color.parseColor("#a5d5ff"));
+        screen1.HeightPercent(100);
+        screen1.WidthPercent(100);
+        screen1.AlignVertical(1);
+        screen1.AlignHorizontal(1);
+        screen1.BackgroundColor(Color.parseColor("#a5d5ff"));
 
 
-        HorizontalArrangement1 = new HorizontalArrangement(Screen1);
+        HorizontalArrangement1 = new HorizontalArrangement(screen1);
         HorizontalArrangement1.HeightPercent(5);
         HorizontalArrangement1.WidthPercent(100);
         HorizontalArrangement1.BackgroundColor(Color.parseColor("#0d8dff"));
@@ -66,7 +61,7 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         Logo.FontItalic(true);
 
 
-        VerticalArrangement1 = new VerticalArrangement(Screen1);
+        VerticalArrangement1 = new VerticalArrangement(screen1);
         VerticalArrangement1.HeightPercent(35);
         VerticalArrangement1.WidthPercent(100);
 
@@ -125,7 +120,7 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         txt_IP.FontSize(15);
         txt_IP.TextColor(Color.parseColor("#FFFFFF"));
 
-        HorizontalArrangement2 = new HorizontalArrangement(Screen1);
+        HorizontalArrangement2 = new HorizontalArrangement(screen1);
         HorizontalArrangement2.AlignHorizontal(1);
         HorizontalArrangement2.AlignVertical(1);
         HorizontalArrangement2.HeightPercent(10);
@@ -172,7 +167,7 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         Co2Measurement.FontItalic(true);
 
 
-        HorizontalArrangement3 = new HorizontalArrangement(Screen1);
+        HorizontalArrangement3 = new HorizontalArrangement(screen1);
         HorizontalArrangement3.AlignHorizontal(1);
         HorizontalArrangement3.AlignVertical(1);
         HorizontalArrangement3.HeightPercent(10);
@@ -219,7 +214,7 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         TVOCMeasurement.FontItalic(true);
 
 
-        HorizontalArrangement4 = new HorizontalArrangement(Screen1);
+        HorizontalArrangement4 = new HorizontalArrangement(screen1);
         HorizontalArrangement4.AlignHorizontal(1);
         HorizontalArrangement4.AlignVertical(1);
         HorizontalArrangement4.HeightPercent(10);
@@ -266,11 +261,11 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         TempMeasurement.FontItalic(true);
 
 
-        HorizontalArrangement5 = new HorizontalArrangement(Screen1);
-        HorizontalArrangement5.HeightPercent(25);
-        HorizontalArrangement5.WidthPercent(100);
+        VerticalArrangement2 = new VerticalArrangement(screen1);
+        VerticalArrangement2.HeightPercent(25);
+        VerticalArrangement2.WidthPercent(100);
 
-        TimeUntilRefreshNull = new Label(HorizontalArrangement5);
+        TimeUntilRefreshNull = new Label(VerticalArrangement2);
         TimeUntilRefreshNull.WidthPercent(100);
         TimeUntilRefreshNull.HeightPercent(5);
         TimeUntilRefreshNull.TextAlignment(1);
@@ -279,7 +274,7 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         TimeUntilRefreshNull.FontItalic(true);
         TimeUntilRefreshNull.TextColor(Color.parseColor("#FFFFFF"));
 
-        TimeUntilRefresh = new Label(HorizontalArrangement5);
+        TimeUntilRefresh = new Label(VerticalArrangement2);
         TimeUntilRefresh.WidthPercent(100);
         TimeUntilRefresh.HeightPercent(5);
         TimeUntilRefresh.TextAlignment(1);
@@ -296,8 +291,8 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         clock.TimerEnabled(true);
         clock.TimerInterval(1000);
 
-//        TimeLeft = 60;
         TickCounter=100;
+        TimeUntilRefresh.Text(String.valueOf(TickCounter));
 
         EventDispatcher.registerEventForDelegation(this, formName, "BackPressed");
         EventDispatcher.registerEventForDelegation(this, formName, "Click");
@@ -367,6 +362,7 @@ public class MainActivity extends Form implements HandlesEventDispatching {
                 else {
                     TickCounter++;
                     TimeUntilRefresh.Text(String.valueOf(TickCounter));
+                    dbg(String.valueOf(TickCounter));
                 }
             }
         return false;
@@ -379,7 +375,6 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         test1+="sensor=IPv4";
         return test1;
     }
-
     String makeGetString_Co2(){
         String test1 = URL_MAIN+"?device=";
         test1+= txt_DeviceName.Text();
@@ -387,7 +382,6 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         test1+="sensor=CO2";
         return test1;
     }
-
     String makeGetString_VOC(){
         String test1 = URL_MAIN+"?device=";
         test1+= txt_DeviceName.Text();
@@ -395,7 +389,6 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         test1+="sensor=VOC";
         return test1;
     }
-
     String makeGetString_CELCIUS(){
         String test1 = URL_MAIN+"?device=";
         test1+= txt_DeviceName.Text();
@@ -429,19 +422,7 @@ public class MainActivity extends Form implements HandlesEventDispatching {
                     dbg("L");
                 }
                 clock.TimerEnabled(true);
-//                TimeLeft = 60;
             }
-//            if (clock.TimerEnabled()) {
-//                return;
-//            }
-//            while (clock.TimerEnabled()) {
-//                Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    public void run() {
-//                        TimeLeft--;
-//                    }
-//                }, 1000);
-//            }
         }
         catch(JSONException e){
                 notifier_Messages.ShowAlert("JSON Error 422");
@@ -450,6 +431,6 @@ public class MainActivity extends Form implements HandlesEventDispatching {
         }
 
         public static void dbg (String debugMsg) {
-        System.err.print( "~~~> " + debugMsg + " <~~~\n");
+        System.err.println( "~~~> " + debugMsg + " <~~~\n");
     }
 }
